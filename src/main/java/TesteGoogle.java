@@ -12,21 +12,21 @@ public class TesteGoogle {
 	
 	// para ser reconhecido como teste JUnit
 	@Test
-	public void teste() { // classes de teste n„o prescisa de metodo main
+	public void teste() { // classes de teste n√£o prescisa de metodo main
 		
 		
-		//se n„o colocar a pasta dos drivers no path do S.O, teria que adicionar essa linha
+		//se n√£o colocar a pasta dos drivers no path do S.O, teria que adicionar essa linha
 		System.setProperty("webdriver.gecko.driver",  "C:\\Users\\Fran\\Documents\\drivers-navegadores\\geckodriver.exe");
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
 		System.setProperty("webdriver.ie.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\IEDriverServer.exe");
 		
 		
-		// api para os metodos de interaÁ„o com o browser È o WebDriver
+		// api para os metodos de intera√ß√£o com o browser √© o WebDriver
 		//WebDriver driverFirefox = new FirefoxDriver(); // instanciando um objeto firefox
 		WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
 		//WebDriver driverExplorer = new InternetExplorerDriver(); // instanciando um objeto internet explorer
 		
-		// definindo o tamanho e a posiÁ„o do browser
+		// definindo o tamanho e a posi√ß√£o do browser
 		//driverChrome.manage().window().setPosition(new Point(100, 100));
 		//driverChrome.manage().window().setSize(new Dimension(1200, 765));
 		driverChrome.manage().window().maximize();
@@ -37,17 +37,17 @@ public class TesteGoogle {
 		driverChrome.get("http://www.google.com");
 		//driverExplorer.get("http://www.google.com");
 		
-		// imprimindo o titulo da p·gina
+		// imprimindo o titulo da p√°gina
 		//System.out.println(driver.getTitle();
 		
-		// verificaÁ„o firefox
+		// verifica√ß√£o firefox
 		//Assert.assertEquals("Google", driverFirefox.getTitle()); 
 		//Assert.assertEquals("Yahoo!", driverFirefox.getTitle()); // teste com erro
 		
-		// verificaÁ„o chrome
+		// verifica√ß√£o chrome
 		Assert.assertEquals("Google", driverChrome.getTitle()); 
 		
-		// verificaÁ„o internet explorer
+		// verifica√ß√£o internet explorer
 		//Assert.assertEquals("Google", driverExplorer.getTitle());
 		
 		driverChrome.quit();
