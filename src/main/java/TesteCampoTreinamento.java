@@ -1,5 +1,6 @@
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -12,68 +13,63 @@ import java.util.List;
 
 public class TesteCampoTreinamento {
 
+  // variável global
+  private WebDriver driverChrome;
+  private DSL dsl;
+
+  // metodo que será chamado antes de qualquer teste
+  @Before
+  public void inicializaAntesDosTestes(){
+    // configurando navegado
+    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
+     driverChrome = new ChromeDriver(); // instanciando um objeto chrome
+    driverChrome.manage().window().setSize(new Dimension(1200, 765));
+    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+    dsl = new DSL(driverChrome);
+  }
+
+  // metodo que será chamado depois de cada teste
+  @After
+  public void inicializaDepoisDosTestes(){
+    driverChrome.quit();
+  }
+
   @Test
   public void testeTextField() {
-    // config navegador
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
 
-    // quando o projeto que est� sendo testado est� na sua m�quina, assim poder� ser executado em qualquer m�quina
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+    // quando o projeto que esta sendo testado esta na sua maquina, assim podera ser executado em qualquer maquina
+    //driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
     //System.getProperty("user.dir"); // propriedade retorna o local exato onde o java esta rodando
 
     // 1� identificar o campo e o que quero fazer com esse elemento, nesse caso, inserir um texto
-    driverChrome.findElement(By.id("elementosForm:nome")).sendKeys("Teste de escrita");
-
-    // 2� verificando se o campo esta preenchendo
-    Assert.assertEquals("Teste de escrita", driverChrome.findElement(By.id("elementosForm:nome")).getAttribute("value"));
-
-    driverChrome.quit();
-
+    dsl.escreveNoCampo("elementosForm:nome","Teste de escrita");
+    Assert.assertEquals("Teste de escrita", dsl.obterValorCampo("elementosForm:nome")); // 2� verificando se o campo esta preenchendo
   }
 
   @Test
   public void InteracaoComTextArea() {
-    // config navegador
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
-    // 1� localizar elemento e o que quero fazer com esse elemento
-    driverChrome.findElement(By.id("elementosForm:sugestoes")).sendKeys("Teste");
-
-    // 2� verificando se o campo esta preenchendo
-    Assert.assertEquals("Teste", driverChrome.findElement(By.id("elementosForm:sugestoes")).getAttribute("value"));
-
-    driverChrome.quit();
+    //  localizar elemento e o que quero fazer com esse elemento
+    dsl.escreveNoCampo("elementosForm:sugestoes", "Teste");
+    //  verificando se o campo esta preenchendo
+    Assert.assertEquals("Teste", dsl.obterValorCampo("elementosForm:sugestoes"));
 
   }
 
   @Test
   public void InteragirComRadioButton() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
-    // 1� localizar elemento e o que quero fazer com esse elemento
-    driverChrome.findElement(By.id("elementosForm:sexo:0")).click();
+    // localizar elemento e o que quero fazer com esse elemento
+    dsl.clicarRadioButton("elementosFrom:sexo:0");
 
     // verificando se o elemento foi clicado
-    Assert.assertTrue(driverChrome.findElement(By.id("elementosForm:sexo:0")).isSelected());
+    Assert.assertTrue(dsl.checandoRadioButtonMarcado("elementosFrom:sexo:0"));
 
-    driverChrome.quit();
   }
 
 
   @Test
   public void InteragirComCheckBox() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     // 1� localizar elemento e o que quero fazer com esse elemento
     driverChrome.findElement(By.id("elementosForm:comidaFavorita:0")).click();
@@ -81,16 +77,10 @@ public class TesteCampoTreinamento {
     // verificando se o elemento foi clicado
     Assert.assertTrue(driverChrome.findElement(By.id("elementosForm:comidaFavorita:0")).isSelected());
 
-    driverChrome.quit();
-
   }
 
   @Test
   public void interagirComCombo() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     // 1� encontre o emelento e guarde em uma vari�vel
     WebElement element = driverChrome.findElement(By.id("elementosForm:escolaridade"));
@@ -106,16 +96,10 @@ public class TesteCampoTreinamento {
     // fazendo a verifica��o
     Assert.assertEquals("2o grau completo", combo.getFirstSelectedOption().getText());
 
-    driverChrome.quit();
-
   }
 
   @Test
   public void verificaValoresDoCombo() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     // 1� encontre o emelento e guarde em uma vari�vel
     WebElement element = driverChrome.findElement(By.id("elementosForm:escolaridade"));
@@ -138,17 +122,11 @@ public class TesteCampoTreinamento {
       }
     }
     Assert.assertTrue(encontrou);
-
-    driverChrome.quit();
   }
 
 
   @Test
   public void verificaValoresDoComboMultiplo() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     WebElement element = driverChrome.findElement(By.id("elementosForm:esportes"));
     Select combo = new Select(element);
@@ -167,17 +145,11 @@ public class TesteCampoTreinamento {
     allSelectedOptions = combo.getAllSelectedOptions();
     Assert.assertEquals(2, allSelectedOptions.size());
 
-    driverChrome.quit();
-
   }
 
 
   @Test
   public void interagirComBotoes() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     // colocando o elemento em uma variavel
     WebElement botao = driverChrome.findElement(By.id("buttonsimple"));
@@ -186,33 +158,20 @@ public class TesteCampoTreinamento {
     // validação
     Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
 
-
-    driverChrome.quit();
-
   }
 
   @Test
   //@Ignore // anotação para não executar esse teste
   public void interagirComLink() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     driverChrome.findElement(By.linkText("Voltar")).click();
     Assert.assertEquals("Voltou!", driverChrome.findElement(By.id("Resultado")).getText());
     //Assert.fail(); // para testes incompletos
 
-    driverChrome.quit();
-
   }
 
   @Test
   public void deveBuscarTextosNaPagina() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     /* //imprimindo todo o texto da tag body
     //System.out.println(driverChrome.findElement(By.tagName("body")).getText());
@@ -228,10 +187,8 @@ public class TesteCampoTreinamento {
     Assert.assertEquals("Cuidado onde clica, muitas armadilhas...",
             driverChrome.findElement(By.className("facilAchar")).getText());
 
-    driverChrome.quit();
 
   }
-
 
 
 }

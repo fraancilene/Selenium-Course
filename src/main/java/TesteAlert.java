@@ -1,17 +1,34 @@
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
 
 public class TesteAlert {
 
-  @Test
-  public void interagirComAlertSimples() {
+  // variável global
+  private WebDriver driverChrome;
+
+  // metodo que será chamado antes de qualquer teste
+  @Before
+  public void inicializaAntesDosTestes(){
+    // configurando navegado
     System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
+    driverChrome = new ChromeDriver(); // instanciando um objeto chrome
     driverChrome.manage().window().setSize(new Dimension(1200, 765));
     driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+
+  }
+
+  // metodo que será chamado depois de cada teste
+  @After
+  public void inicializaDepoisDosTestes(){
+    driverChrome.quit();
+  }
+
+  @Test
+  public void interagirComAlertSimples() {
 
     // manipulando um alert externo
     driverChrome.findElement(By.id("alert")).click();
@@ -27,15 +44,10 @@ public class TesteAlert {
     // escrevendo o texto do alerta no campo nome
     driverChrome.findElement(By.id("elementosForm:nome")).sendKeys(textoAlerta);
 
-    driverChrome.quit();
   }
 
   @Test
   public void interagirComAlertConfirm() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     driverChrome.findElement(By.id("confirm")).click();
     Alert alerta = driverChrome.switchTo().alert();
@@ -52,16 +64,11 @@ public class TesteAlert {
     Assert.assertEquals("Negado", alerta.getText());
     alerta.dismiss();
 
-    driverChrome.quit();
 
   }
 
   @Test
   public void interagirComAlertaPrompt() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-    WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-    driverChrome.manage().window().setSize(new Dimension(1200, 765));
-    driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
     driverChrome.findElement(By.id("prompt")).click();
     Alert alert = driverChrome.switchTo().alert();
@@ -76,12 +83,6 @@ public class TesteAlert {
     Assert.assertEquals(":D", alert.getText());
     alert.accept();
 
-    driverChrome.quit();
-
   }
-
-
-
-
 
 }
