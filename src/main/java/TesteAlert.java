@@ -1,10 +1,8 @@
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class TesteAlert {
 
@@ -67,7 +65,7 @@ public class TesteAlert {
 
     driverChrome.findElement(By.id("prompt")).click();
     Alert alert = driverChrome.switchTo().alert();
-    Assert.assertEquals("Digite um número", alert.getText());
+    Assert.assertEquals("Digite um numero", alert.getText());
 
     // escrevendo no alerta do prompt
     alert.sendKeys("12");
@@ -81,4 +79,9 @@ public class TesteAlert {
     driverChrome.quit();
 
   }
+
+
+
+
+
 }
