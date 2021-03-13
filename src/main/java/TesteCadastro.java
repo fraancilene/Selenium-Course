@@ -1,54 +1,64 @@
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
 
 public class TesteCadastro {
 
-    @Test
-    public void fazerCadastro() {
+    private WebDriver driverChrome;
+    private DSL dsl;
+
+    @Before
+    public void inicializaAntesDosTestes(){
+        // configurando navegado
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
+        driverChrome = new ChromeDriver(); // instanciando um objeto chrome
         driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+        //driverChrome.get("https://teste-git-main-fraancilene.vercel.app/");
+       driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+        dsl = new DSL(driverChrome);
+    }
+
+    // metodo que será chamado depois de cada teste
+    @After
+    public void inicializaDepoisDosTestes(){
+        driverChrome.quit();
+    }
+
+
+    @Test
+    public void fazerCadastroComSucesso() {
 
         // PREENCHENDO O FORMULÁRIO
-        driverChrome.findElement(By.id("elementosForm:nome")).sendKeys("Francilene");
-        driverChrome.findElement(By.id("elementosForm:sobrenome")).sendKeys("Silva");
-        driverChrome.findElement(By.id("elementosForm:sexo:1")).click();
-        driverChrome.findElement(By.id("elementosForm:comidaFavorita:1")).click();
+        dsl.escreveNoCampo("elementosForm:nome", "Francilene");
+        dsl.escreveNoCampo("elementosForm:sobrenome", "Silva");
+        dsl.clicarBotao("elementosForm:sexo:1");
+        dsl.clicarBotao("elementosForm:comidaFavorita:1");
 
         // dropdowns
-        new Select(driverChrome.findElement(By.id("elementosForm:escolaridade"))).selectByVisibleText("Superior");
-        new Select(driverChrome.findElement(By.id("elementosForm:esportes"))).selectByVisibleText("Corrida");
-        driverChrome.findElement(By.id("elementosForm:cadastrar")).click();
+        dsl.selecionarCombo("elementosForm:escolaridade", "Superior");
+        dsl.selecionarCombo("elementosForm:esportes", "Corrida");
+        dsl.clicarBotao("elementosForm:cadastrar");
 
         // verificações
-        Assert.assertTrue(driverChrome.findElement(By.id("resultado")).getText().startsWith("Cadastrado!"));
-        Assert.assertTrue(driverChrome.findElement(By.id("descNome")).getText().endsWith("Francilene") );
-        Assert.assertEquals("Sobrenome: Silva", driverChrome.findElement(By.id("descSobrenome")).getText() );
-        Assert.assertEquals("Sexo: Feminino", driverChrome.findElement(By.id("descSexo")).getText() );
-        Assert.assertEquals("Comida: Frango", driverChrome.findElement(By.id("descComida")).getText() );
-        Assert.assertEquals("Esportes: Corrida", driverChrome.findElement(By.id("descEsportes")).getText() );
-        Assert.assertEquals("Escolaridade: superior", driverChrome.findElement(By.id("descEscolaridade")).getText() );
-
-        driverChrome.quit();
+        Assert.assertTrue(dsl.obterTexto("resultado").startsWith("Cadastrado!"));
+        Assert.assertTrue(dsl.obterTexto("descNome").endsWith("Francilene"));
+        Assert.assertEquals("Sobrenome: Silva", dsl.obterTexto("descSobrenome"));
+        Assert.assertEquals("Sexo: Feminino", dsl.obterTexto("descSexo"));
+        Assert.assertEquals("Comida: Frango", dsl.obterTexto("descComida"));
+        Assert.assertEquals("Esportes: Corrida", dsl.obterTexto("descEsportes"));
+        Assert.assertEquals("Escolaridade: superior", dsl.obterTexto("descEscolaridade"));
     }
 
     @Test
     public void validarNomeObrigatorio(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-        driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
         // pegando elemento
-        driverChrome.findElement(By.id("elementosForm:cadastrar")).click();
+        dsl.clicarBotao("elementosForm:cadastrar");
         Alert alert = driverChrome.switchTo().alert();
-
         Assert.assertEquals("Nome eh obrigatorio", alert.getText());
-        driverChrome.quit();
 
 
     }
@@ -56,88 +66,69 @@ public class TesteCadastro {
 
     @Test
     public void validarSobrenomeObrigatorio(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-        driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-
-        // pegando elemento
-        driverChrome.findElement(By.id("elementosForm:nome")).sendKeys("Nome qualquer");
-        driverChrome.findElement(By.id("elementosForm:cadastrar")).click();
+        dsl.escreveNoCampo("elementosForm:nome", "Nome qualquer");
+        dsl.clicarBotao("elementosForm:cadastrar");
         Alert alert = driverChrome.switchTo().alert();
-
         Assert.assertEquals("Sobrenome eh obrigatorio", alert.getText());
-        driverChrome.quit();
 
 
     }
 
     @Test
     public void validarSexoObrigatorio(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-        driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-
 
         driverChrome.findElement(By.id("elementosForm:nome")).sendKeys("Nome qualquer"); // preenchendo nome
         driverChrome.findElement(By.id("elementosForm:sobrenome")).sendKeys("Sobrenome qualquer"); // preenchendo sobrenome
         driverChrome.findElement(By.id("elementosForm:cadastrar")).click();
-        Alert alert = driverChrome.switchTo().alert();
 
+        Alert alert = driverChrome.switchTo().alert();
         Assert.assertEquals("Sexo eh obrigatorio", alert.getText());
-        driverChrome.quit();
+
+
+    }
+
+    @Test
+    public void sexoObrigatorio(){
+        dsl.escreveNoCampo("elementosForm:nome", "Nome qualquer");
+        dsl.escreveNoCampo("elementosForm:sobrenome", "Nome qualquer");
+        dsl.clicarBotao("elementosForm:cadastrar");
+
+        Assert.assertEquals("Sexo eh obrigatorio",  dsl.darFocoNoAlertEpegaTexto());
+
 
     }
 
     @Test
     public void validarComidaVegetariana(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-        driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-
         // pegando elemento
-        driverChrome.findElement(By.id("elementosForm:nome")).sendKeys("Nome qualquer");
-        driverChrome.findElement(By.id("elementosForm:sobrenome")).sendKeys("Sobreome qualquer");
-        driverChrome.findElement(By.id("elementosForm:sobrenome")).sendKeys("Sobreome qualquer");
-        driverChrome.findElement(By.id("elementosForm:sexo:0")).click();
-        driverChrome.findElement(By.id("elementosForm:comidaFavorita:0")).click();
-        driverChrome.findElement(By.id("elementosForm:comidaFavorita:3")).click();
-        driverChrome.findElement(By.id("elementosForm:cadastrar")).click();
-        Alert alert = driverChrome.switchTo().alert();
 
-        Assert.assertEquals("Tem certeza que voce eh vegetariano?", alert.getText());
-        driverChrome.quit();
+        dsl.escreveNoCampo("elementosForm:nome", "Nome qualquer");
+        dsl.escreveNoCampo("elementosForm:sobrenome", "Nome qualquer");
+        dsl.clicarBotao("elementosForm:sexo:1");
+        dsl.clicarBotao("elementosForm:comidaFavorita:0");
+        dsl.clicarBotao("elementosForm:comidaFavorita:3");
+        dsl.clicarBotao("elementosForm:cadastrar");
 
+        Assert.assertEquals("Tem certeza que voce eh vegetariano?",  dsl.darFocoNoAlertEpegaTexto());
     }
 
     @Test
     public void validarEsportistsIndeciso(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-        driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
         // pegando elemento
-        driverChrome.findElement(By.id("elementosForm:nome")).sendKeys("Nome qualquer");
-        driverChrome.findElement(By.id("elementosForm:sobrenome")).sendKeys("Sobreome qualquer");
-        driverChrome.findElement(By.id("elementosForm:sobrenome")).sendKeys("Sobreome qualquer");
-        driverChrome.findElement(By.id("elementosForm:sexo:0")).click();
-        driverChrome.findElement(By.id("elementosForm:comidaFavorita:0")).click();
+        dsl.escreveNoCampo("elementosForm:nome", "Nome qualquer");
+        dsl.escreveNoCampo("elementosForm:sobrenome", "Nome qualquer");
+        dsl.clicarBotao("elementosForm:sexo:1");
+        dsl.clicarBotao("elementosForm:comidaFavorita:0");
 
-        //busca pelo combo do esporte
-        Select dropdown = new Select(driverChrome.findElement(By.id("elementosForm:esportes")));
-        dropdown.selectByVisibleText("Karate");
-        dropdown.selectByVisibleText("O que eh esporte?");
+        dsl.selecionarCombo("elementosForm:esportes", "Karate");
+        dsl.selecionarCombo("elementosForm:esportes", "O que eh esporte?");
 
-        // enviando formulario
-        driverChrome.findElement(By.id("elementosForm:cadastrar")).click();
-        Alert alert = driverChrome.switchTo().alert();
+        dsl.clicarBotao("elementosForm:cadastrar");
 
         // Assertiva
-        Assert.assertEquals("Voce faz esporte ou nao?", alert.getText());
-        driverChrome.quit();
+        Assert.assertEquals("Voce faz esporte ou nao?", dsl.darFocoNoAlertEpegaTexto());
+
 
     }
 }

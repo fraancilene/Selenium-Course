@@ -60,42 +60,23 @@ public class TesteCampoTreinamento {
   public void InteragirComRadioButton() {
 
     // localizar elemento e o que quero fazer com esse elemento
-    dsl.clicarRadioButton("elementosFrom:sexo:0");
-
+    dsl.clicarRadioEcheckbox("elementosFrom:sexo:0");
     // verificando se o elemento foi clicado
-    Assert.assertTrue(dsl.checandoRadioButtonMarcado("elementosFrom:sexo:0"));
+    Assert.assertTrue(dsl.checandoRadioEcheckboxMarcado("elementosFrom:sexo:0"));
 
   }
 
 
   @Test
   public void InteragirComCheckBox() {
-
-    // 1� localizar elemento e o que quero fazer com esse elemento
-    driverChrome.findElement(By.id("elementosForm:comidaFavorita:0")).click();
-
-    // verificando se o elemento foi clicado
-    Assert.assertTrue(driverChrome.findElement(By.id("elementosForm:comidaFavorita:0")).isSelected());
-
+    dsl.clicarRadioEcheckbox("\"elementosForm:comidaFavorita:0\"");
+    dsl.checandoRadioEcheckboxMarcado("elementosForm:comidaFavorita:0");
   }
 
   @Test
   public void interagirComCombo() {
-
-    // 1� encontre o emelento e guarde em uma vari�vel
-    WebElement element = driverChrome.findElement(By.id("elementosForm:escolaridade"));
-
-    // use o select para manipular o dropdown
-    Select combo = new Select(element);
-
-    // forma de selecionar as op��es do dropdown
-    //combo.selectByIndex(2);
-    //combo.selectByValue("superior");
-    combo.selectByVisibleText("2o grau completo");
-
-    // fazendo a verifica��o
-    Assert.assertEquals("2o grau completo", combo.getFirstSelectedOption().getText());
-
+    dsl.selecionarCombo("elementosForm:escolaridade", "2o grau completo");
+    Assert.assertEquals("2o grau completo", dsl.obterValorCombo("elementosForm:escolaridade"));
   }
 
   @Test
@@ -103,13 +84,10 @@ public class TesteCampoTreinamento {
 
     // 1� encontre o emelento e guarde em uma vari�vel
     WebElement element = driverChrome.findElement(By.id("elementosForm:escolaridade"));
-
     // use o select para manipular o dropdown
     Select combo = new Select(element);
-
     // retornando uma lista de todas as op��es do webElemnt
     List<WebElement> options = combo.getOptions();
-
     // verifica��es
     Assert.assertEquals(8, options.size()); // quantidade de op��es que o dropdown possui
 
@@ -128,14 +106,12 @@ public class TesteCampoTreinamento {
   @Test
   public void verificaValoresDoComboMultiplo() {
 
+    dsl.selecionarCombo("elementosForm:esportes", "Natacao");
+    dsl.selecionarCombo("elementosForm:esportes", "Corrida");
+    dsl.selecionarCombo("elementosForm:esportes", "O que eh esporte?");
+
     WebElement element = driverChrome.findElement(By.id("elementosForm:esportes"));
     Select combo = new Select(element);
-
-    // selecionando campos multiplos
-    combo.selectByVisibleText("Natacao");
-    combo.selectByVisibleText("Corrida");
-    combo.selectByVisibleText("O que eh esporte?");
-
     // Verificações
     List<WebElement> allSelectedOptions = combo.getAllSelectedOptions();
     Assert.assertEquals(3, allSelectedOptions.size());
@@ -151,10 +127,9 @@ public class TesteCampoTreinamento {
   @Test
   public void interagirComBotoes() {
 
+    dsl.clicarBotao("buttonsimple");
     // colocando o elemento em uma variavel
-    WebElement botao = driverChrome.findElement(By.id("buttonsimple"));
-    botao.click();
-
+    WebElement botao= driverChrome.findElement(By.id("buttonsimple"));
     // validação
     Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
 
@@ -163,9 +138,8 @@ public class TesteCampoTreinamento {
   @Test
   //@Ignore // anotação para não executar esse teste
   public void interagirComLink() {
-
-    driverChrome.findElement(By.linkText("Voltar")).click();
-    Assert.assertEquals("Voltou!", driverChrome.findElement(By.id("Resultado")).getText());
+  dsl.clicarLink("Voltar");
+    Assert.assertEquals("Voltou!", dsl.obterTexto("Resultado"));
     //Assert.fail(); // para testes incompletos
 
   }
@@ -175,19 +149,13 @@ public class TesteCampoTreinamento {
 
     /* //imprimindo todo o texto da tag body
     //System.out.println(driverChrome.findElement(By.tagName("body")).getText());
-
     // verificando se existe o titulo do texto titulo do texto/ mas essa não é a melhor forma
     Assert.assertTrue(driverChrome.findElement(By.tagName("body"))
             .getText().contains("Campo de Treinamento"));
   */
 
-    Assert.assertEquals("Campo de Treinamento",
-            driverChrome.findElement(By.tagName("h3")).getText());
-
-    Assert.assertEquals("Cuidado onde clica, muitas armadilhas...",
-            driverChrome.findElement(By.className("facilAchar")).getText());
-
-
+    Assert.assertEquals("Campo de Treinamento", dsl.obterTexto(By.tagName("h3")));
+    Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", dsl.obterTexto(By.className("facilAchar")));
   }
 
 
