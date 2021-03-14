@@ -4,21 +4,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import pages.DSL;
 
 public class TesteAlert {
 
   // variável global
   private WebDriver driverChrome;
+  private DSL dsl;
 
-  // metodo que será chamado antes de qualquer teste
   @Before
   public void inicializaAntesDosTestes(){
     // configurando navegado
     System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
     driverChrome = new ChromeDriver(); // instanciando um objeto chrome
     driverChrome.manage().window().setSize(new Dimension(1200, 765));
+    //driverChrome.get("https://teste-git-main-fraancilene.vercel.app/");
     driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-
+    dsl = new DSL(driverChrome);
   }
 
   // metodo que será chamado depois de cada teste
@@ -27,19 +29,18 @@ public class TesteAlert {
     driverChrome.quit();
   }
 
+
   @Test
   public void interagirComAlertSimples() {
-
     // manipulando um alert externo
-    driverChrome.findElement(By.id("alert")).click();
+    dsl.clicarBotao("alert");
 
     // pedindo para o selenium alterar o foco para o alerta para manipulá-lo
-    Alert alert = driverChrome.switchTo().alert();
-    String textoAlerta = alert.getText(); //capturando o texto do alerta
+    String textoAlerta = dsl.focoAlertaPegaTextoEAceita();
 
     // verificações
-    Assert.assertEquals("Alert Simples", alert.getText());
-    alert.accept(); // aceitando o alerta para fechá-lo
+    Assert.assertEquals("Alert Simples", textoAlerta);
+   // alert.accept(); // aceitando o alerta para fechá-lo
 
     // escrevendo o texto do alerta no campo nome
     driverChrome.findElement(By.id("elementosForm:nome")).sendKeys(textoAlerta);

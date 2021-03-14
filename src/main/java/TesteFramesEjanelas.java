@@ -2,11 +2,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import pages.DSL;
 
 public class  TesteFramesEjanelas {
 
@@ -33,23 +33,13 @@ public class  TesteFramesEjanelas {
 
     @Test
     public void interagirComFrames() {
-
-
-        driverChrome.switchTo().frame("frame1"); //colocando foco no frame
-
+        dsl.entrarFrame("frame1");
         dsl.clicarBotao("frameButton");
-
-        Alert alert = driverChrome.switchTo().alert(); //colocando foco no alert
-        String msg = dsl.darFocoNoAlertEpegaTexto();
+        String msg = dsl.focoAlertaPegaTextoEAceita();
         Assert.assertEquals("Frame OK!", msg);
-        alert.accept();
 
-        // trazendo o foco para a página principal
-        driverChrome.switchTo().defaultContent();
-
-        // escrevendo a mensagem do alert no cmapo nome
+        dsl.sairFrame();
         dsl.escreveNoCampo("elementosForm:nome", msg);
-
 
     }
 
@@ -57,32 +47,24 @@ public class  TesteFramesEjanelas {
     public void InteragirComJanelas() {
 
         dsl.clicarBotao("buttonPopUpEasy");
-        driverChrome.switchTo().window("Popup"); // foco no popup
-
-        driverChrome.findElement(By.tagName("textarea")).sendKeys("Deu Certo!"); // escrevendo no textarea da popup
-        driverChrome.close(); // fechando a popup
-        driverChrome.switchTo().window("");
-        driverChrome.findElement(By.tagName("textarea")).sendKeys("E agora?"); // escrevendo no textarea da pagina principal
+        dsl.trocarJanela("Popup");
+        dsl.escrever(By.tagName("textarea"), "Deu certo?");
+        driverChrome.close();
+        dsl.trocarJanela("");
+        dsl.escrever(By.tagName("textarea"), "e agora?");
 
     }
 
 
     @Test
     public void InteragirComJanelasSemtitulo() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Fran\\Documents\\drivers-navegadores\\chromedriver.exe");
-        WebDriver driverChrome = new ChromeDriver(); // instanciando um objeto chrome
-        driverChrome.manage().window().setSize(new Dimension(1200, 765));
-        driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-
-        driverChrome.findElement(By.id("buttonPopUpHard")).click();
-        //System.out.println(driverChrome.getWindowHandle()); // retornando id da popup que não tem nome
-        //System.out.println(driverChrome.getWindowHandles()); // retornando os ids das popups que estão sendo gerenciadas
-        driverChrome.switchTo().window((String) driverChrome.getWindowHandles().toArray()[1]);
-        driverChrome.findElement(By.tagName("textarea")).sendKeys("Deu certo?");
-        driverChrome.switchTo().window((String) driverChrome.getWindowHandles().toArray()[0]);
-        driverChrome.findElement(By.tagName("textarea")).sendKeys("E agora?");
-
-        driverChrome.quit();
+        dsl.clicarBotao("buttonPopUpHard");
+        System.out.println(driverChrome.getWindowHandle());
+        System.out.println(driverChrome.getWindowHandles());
+        dsl.trocarJanela((String) driverChrome.getWindowHandles().toArray()[1]);
+        dsl.escrever(By.tagName("textarea"), "Deu certo?");
+        dsl.trocarJanela((String) driverChrome.getWindowHandles().toArray()[0]);
+        dsl.escrever(By.tagName("textarea"), "e agora?");
 
 
     }

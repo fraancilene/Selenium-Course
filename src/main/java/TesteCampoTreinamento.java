@@ -8,7 +8,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
+import pages.DSL;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TesteCampoTreinamento {
@@ -41,9 +43,9 @@ public class TesteCampoTreinamento {
     //driverChrome.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
     //System.getProperty("user.dir"); // propriedade retorna o local exato onde o java esta rodando
 
-    // 1� identificar o campo e o que quero fazer com esse elemento, nesse caso, inserir um texto
+    // identificar o campo e o que quero fazer com esse elemento, nesse caso, inserir um texto
     dsl.escreveNoCampo("elementosForm:nome","Teste de escrita");
-    Assert.assertEquals("Teste de escrita", dsl.obterValorCampo("elementosForm:nome")); // 2� verificando se o campo esta preenchendo
+    Assert.assertEquals("Teste de escrita", dsl.obterValorCampo("elementosForm:nome")); //  verificando se o campo esta preenchendo
   }
 
   @Test
@@ -60,16 +62,16 @@ public class TesteCampoTreinamento {
   public void InteragirComRadioButton() {
 
     // localizar elemento e o que quero fazer com esse elemento
-    dsl.clicarRadioEcheckbox("elementosFrom:sexo:0");
+    dsl.clicarRadioEcheckbox("elementosForm:sexo:0");
     // verificando se o elemento foi clicado
-    Assert.assertTrue(dsl.checandoRadioEcheckboxMarcado("elementosFrom:sexo:0"));
+    Assert.assertTrue(dsl.checandoRadioEcheckboxMarcado("elementosForm:sexo:0"));
 
   }
 
 
   @Test
   public void InteragirComCheckBox() {
-    dsl.clicarRadioEcheckbox("\"elementosForm:comidaFavorita:0\"");
+    dsl.clicarRadioEcheckbox("elementosForm:comidaFavorita:0");
     dsl.checandoRadioEcheckboxMarcado("elementosForm:comidaFavorita:0");
   }
 
@@ -80,7 +82,10 @@ public class TesteCampoTreinamento {
   }
 
   @Test
-  public void verificaValoresDoCombo() {
+  public void DeveInteragirComCombo() {
+
+    dsl.selecionarCombo("elementosForm:escolaridade", "2o grau completo");
+    Assert.assertEquals("2o grau completo", dsl.obterValorCombo("elementosForm:escolaridade"));
 
     // 1� encontre o emelento e guarde em uma vari�vel
     WebElement element = driverChrome.findElement(By.id("elementosForm:escolaridade"));
@@ -102,6 +107,12 @@ public class TesteCampoTreinamento {
     Assert.assertTrue(encontrou);
   }
 
+ @Test
+  public void deveVerificarValoresCombo(){
+    Assert.assertEquals(8, dsl.obterQuantidadeOpcoesCombo("elementosForm:escolaridade"));
+    Assert.assertTrue(dsl.verificarOpcaoCombo("elementosForm:escolaridade", "Mestrado"));
+
+  }
 
   @Test
   public void verificaValoresDoComboMultiplo() {
@@ -109,18 +120,13 @@ public class TesteCampoTreinamento {
     dsl.selecionarCombo("elementosForm:esportes", "Natacao");
     dsl.selecionarCombo("elementosForm:esportes", "Corrida");
     dsl.selecionarCombo("elementosForm:esportes", "O que eh esporte?");
+    List<String> opcoesMarcadas = dsl.obterValoresCombo("elementosForm:esportes");
+    Assert.assertEquals(3, opcoesMarcadas.size());
 
-    WebElement element = driverChrome.findElement(By.id("elementosForm:esportes"));
-    Select combo = new Select(element);
-    // Verificações
-    List<WebElement> allSelectedOptions = combo.getAllSelectedOptions();
-    Assert.assertEquals(3, allSelectedOptions.size());
-
-    // desmarcando algo desse combo
-    combo.deselectByVisibleText("Corrida");
-    allSelectedOptions = combo.getAllSelectedOptions();
-    Assert.assertEquals(2, allSelectedOptions.size());
-
+    dsl.deselecionarCombo("elementosForm:esportes", "Corrida");
+    opcoesMarcadas = dsl.obterValoresCombo("elementosForm:esportes");
+    Assert.assertEquals(2, opcoesMarcadas.size());
+    Assert.assertTrue(opcoesMarcadas.containsAll(Arrays.asList("Natacao", "O que eh esporte?")));
   }
 
 
@@ -128,17 +134,13 @@ public class TesteCampoTreinamento {
   public void interagirComBotoes() {
 
     dsl.clicarBotao("buttonsimple");
-    // colocando o elemento em uma variavel
-    WebElement botao= driverChrome.findElement(By.id("buttonsimple"));
-    // validação
-    Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
+    Assert.assertEquals("Obrigado!", dsl.obterValueElemento("buttonSimple"));
 
   }
 
   @Test
-  //@Ignore // anotação para não executar esse teste
   public void interagirComLink() {
-  dsl.clicarLink("Voltar");
+    dsl.clicarLink("Voltar");
     Assert.assertEquals("Voltou!", dsl.obterTexto("Resultado"));
     //Assert.fail(); // para testes incompletos
 
@@ -153,9 +155,18 @@ public class TesteCampoTreinamento {
     Assert.assertTrue(driverChrome.findElement(By.tagName("body"))
             .getText().contains("Campo de Treinamento"));
   */
-
     Assert.assertEquals("Campo de Treinamento", dsl.obterTexto(By.tagName("h3")));
     Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", dsl.obterTexto(By.className("facilAchar")));
+  }
+
+  @Test
+  public void testTextFieldDuplo(){
+    dsl.escreveNoCampo("elementosForm:nome", "Francilene");
+    Assert.assertEquals("Francilene", dsl.obterValorCampo("elementosForm:nome"));dsl.escreveNoCampo("elementosForm:nome", "Francilene");
+
+    dsl.escreveNoCampo("elementosForm:nome", "Silva");
+    Assert.assertEquals("Silva", dsl.obterValorCampo("elementosForm:nome"));
+
   }
 
 
