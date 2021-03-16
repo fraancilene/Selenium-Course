@@ -1,0 +1,26 @@
+SOBRE XPATH
+Se o elemento no html não tiver id, usar o Xpath
+o Xpath fornecido pelo navegador está muito amarrado ao documento, não é indicado usar.
+
+1 - //*[@id="elementosForm:nome"]
+sem id - (//input)[6]
+
+2 - //*[@id="elementosForm:sexo"]/tbody/tr/td[2]/label
+sem id - //*[@name='elementosForm:sexo' and value='F']
+
+3 - //*[@id="elementosForm:comidaFavorita"]/tbody/tr/td[3]/label
+sem busca de texto - /*[@id="elementosForm:comidaFavorita:2"]/../label
+	outra forma - 	/*[@id="elementosForm:comidaFavorita:2"]/following-sibling::label
+
+4 - //*[@id="tabelaSemJSF"]/tbody/tr[3]/td[1]
+outra forma - //*[@id="tabelaSemJSF"]//td[.=UsuarioB']
+
+5 - //*[@id="elementosForm:tableUsuarios"]/tbody/tr[2]/td[3]/input
+outra forma - //*[@id="elementosForm:tableUsuarios"]//td[.='Maria']/..input[@type='button']
+
+
+6 - //*[@id="elementosForm:tableUsuarios"]/tbody/tr[4]/td[1]
+outra forma - //*[@id="elementosForm:tableUsuarios"]//td[1][.='Doutorado]/..//td[2][.='Doutorado']/..//input[@type='radio']
+
+7 - //*[@id="elementosForm:tableUsuarios"]/tbody/tr[5]/td[6]/input
+outra forma - (//*[@id="elementosForm:tableUsuarios"]//td[2][.='Superior'])[2]/..//input[@type'text']

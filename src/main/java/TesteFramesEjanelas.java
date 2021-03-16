@@ -28,7 +28,7 @@ public class  TesteFramesEjanelas {
     // metodo que será chamado depois de cada teste
     @After
     public void inicializaDepoisDosTestes(){
-        driverChrome.quit();
+       // driverChrome.quit();
     }
 
 
@@ -81,8 +81,7 @@ public class  TesteFramesEjanelas {
 
     }
 
-    /* Link do plugin para continuação do curso
-    * */
+
 }
 
 
