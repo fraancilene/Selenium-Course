@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import pages.DSL;
 
@@ -44,6 +45,17 @@ public class  TesteFramesEjanelas {
     }
 
     @Test
+    public void deveInteragirComFrameEscondido(){
+        WebElement frame = driverChrome.findElement(By.id("frame2"));
+        dsl.executarJS("window.scrollBy(0, arguments[0])", frame.getLocation().y);//codigo js
+        dsl.entrarFrame("frame2");
+        dsl.clicarBotao("frameButton");
+        String msg = dsl.focoAlertaPegaTextoEAceita();
+        Assert.assertEquals("Frame OK!", msg);
+
+    }
+
+    @Test
     public void InteragirComJanelas() {
 
         dsl.clicarBotao("buttonPopUpEasy");
@@ -68,6 +80,9 @@ public class  TesteFramesEjanelas {
 
 
     }
+
+    /* Link do plugin para continuação do curso
+    * */
 }
 
 

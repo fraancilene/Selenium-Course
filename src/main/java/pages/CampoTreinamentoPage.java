@@ -32,15 +32,52 @@ public class CampoTreinamentoPage {
         dsl.selecionarCombo("elementosForm:escolaridade", "Superior");
     }
 
-    public void setSelecionarEsporte(String valor) {
-        dsl.selecionarCombo("elementosForm:esportes", valor);
+    public void setSelecionarEsporte(String... valores) {
+        for (String valor: valores)
+            dsl.selecionarCombo("elementosForm:esportes", valor);
     }
 
     public void cadastrar() {
         dsl.clicarBotao("elementosForm:cadastrar");
     }
 
-    public String obterResultado() {
+    public String obterResultadoCadastro() {
         return dsl.obterTexto("resultado");
+    }
+
+    public String obterNomeCadastro() {
+        return dsl.obterTexto("descNome");
+    }
+
+    public String obterSobrenomeCadastro() {
+        return dsl.obterTexto("descSobrenome");
+    }
+
+    public String obterSexoCadastro() {
+        return dsl.obterTexto("descSexo");
+    }
+
+    public String obterComidaCadastro() {
+        return dsl.obterTexto("descComida");
+    }
+
+    public String obterEsporteCadastro() {
+        return dsl.obterTexto("descEsportes");
+    }
+
+    public String obterEscolaridadeCadastro() {
+        return dsl.obterTexto("descEscolaridade");
+    }
+
+    public void setSexoMasculino() {
+        dsl.clicarBotao("elementosForm:sexo:0");
+    }
+
+    public void setComidaCarne() {
+        dsl.clicarBotao("elementosForm:comidaFavorita:0");
+    }
+
+    public void setComidaVegetariana() {
+        dsl.clicarBotao("elementosForm:comidaFavorita:3");
     }
 }

@@ -2,10 +2,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import pages.DSL;
@@ -33,7 +30,7 @@ public class TesteCampoTreinamento {
   // metodo que será chamado depois de cada teste
   @After
   public void inicializaDepoisDosTestes(){
-    driverChrome.quit();
+    //driverChrome.quit();
   }
 
   @Test
@@ -167,6 +164,18 @@ public class TesteCampoTreinamento {
     dsl.escreveNoCampo("elementosForm:nome", "Silva");
     Assert.assertEquals("Silva", dsl.obterValorCampo("elementosForm:nome"));
 
+  }
+
+
+  @Test
+  public void testJavascript(){
+    JavascriptExecutor js = (JavascriptExecutor) driverChrome;
+    //js.executeScript("alert('Testando js via Selenium')");
+    js.executeScript("document.getElementById('elementosForm:nome').value = 'Escrito via js'");
+    js.executeScript("document.getElementById('elementosForm:sobrenome').type = 'radio'");
+
+    WebElement element = driverChrome.findElement(By.id("elementosForm:nome"));
+    js.executeScript("arguments[0].style.border = arguments[1]", element, "solid 4px red");
   }
 
 
