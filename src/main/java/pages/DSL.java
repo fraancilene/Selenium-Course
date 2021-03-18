@@ -36,8 +36,12 @@ public class DSL {
 
   /********** Radio e Check ****************/
 
+  public void clicarRadioEcheckbox(By by) {
+    driver.findElement(by).click();
+  }
+
   public void clicarRadioEcheckbox(String id_campo) {
-    driver.findElement(By.id(id_campo)).click();
+    clicarRadioEcheckbox(By.id(id_campo));
   }
 
   public boolean checandoRadioEcheckboxMarcado(String id_campo) {
@@ -97,6 +101,11 @@ public class DSL {
       }
     }
     return false;
+  }
+
+  public void selecionarComboPrime(String radical, String valor) {
+    clicarRadioEcheckbox(By.xpath("//*[@id='"+radical+"']/../..//span"));
+    clicarRadioEcheckbox(By.xpath("//*[@id='"+radical+"_items']//li[.='"+valor+"']"));
   }
 
   /****** Botão ******/

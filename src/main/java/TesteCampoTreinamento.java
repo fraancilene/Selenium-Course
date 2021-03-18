@@ -30,7 +30,7 @@ public class TesteCampoTreinamento {
   // metodo que será chamado depois de cada teste
   @After
   public void inicializaDepoisDosTestes(){
-    //driverChrome.quit();
+    driverChrome.quit();
   }
 
   @Test
